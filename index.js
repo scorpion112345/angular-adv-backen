@@ -10,19 +10,20 @@ const app = express()
 
 // Configurar cosr
 app.use(cors())
+app.use(express.json());
+
+
+// rutas
+app.use('/api/usuarios', require('./routes/usuarios'))
+app.use('/api/login', require('./routes/auth'))
+
 
 // db connection
 dbConnection()
 
 
 
-//mongodb://localhost/deliver
-app.get('/', (req, res) => {
-    res.json({
-        ok: true,
-        msg: "asad"
-    })
-})
+
 
 app.listen(process.env.PORT, () => {
     console.log("Server is runing on port", process.env.PORT);
