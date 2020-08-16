@@ -5,10 +5,20 @@ const { generarJwt } = require('../helpers/jwt')
 
 
 const getUsuarios = async (req, res) => {
-  const usuarios = await Usuario.find({}, 'nombre email google role');
+  let page = Number(req.query.page) || 1
+  page = (page - 1) * 5
+
+  const [usuarios, total] = await Promise.all([
+    Usuario.find({}, 'nombre email google role img')
+      .skip(page)
+      .limit(5),
+    Usuario.countDocuments()
+  ])
+
   res.json({
     ok: true,
-    usuarios
+    usuarios,
+    total
   })
 }
 
