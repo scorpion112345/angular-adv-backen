@@ -36,18 +36,58 @@ const crearHospital = async (req, res = response) => {
 }
 
 const actualizarHospital = async (req, res = response) => {
-    res.json({
-        ok: true,
-        usuarios: "asda"
-    })
+    const id = req.params.id
+    const usuarioId = req.user.id
+    try {
+        const hospital = await Hospital.findById(id)
+        if (!hospital) {
+            return res.status(400).json({
+                ok: false,
+                msg: "no hospital encontrado"
+            })
+        }
+
+        const cambiosHospital = {
+            ...req.body,
+            usuario: usuarioId
+        }
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, { new: true })
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+        })
+    } catch (error) {
+        res.json({
+            ok: false,
+            msg: "Error al crear el hospital"
+        })
+    }
+
 }
 
 const borrarHospital = async (req, res = response) => {
+    const id = req.params.id
+    try {
+        const hospital = await Hospital.findById(id)
+        if (!hospital) {
+            return res.status(400).json({
+                ok: false,
+                msg: "no hospital encontrado"
+            })
+        }
 
-    res.json({
-        ok: true,
-        usuarios: "asda"
-    })
+        await Hospital.findByIdAndDelete(id)
+
+        res.json({
+            ok: true
+        })
+    } catch (error) {
+        res.json({
+            ok: false,
+            msg: "Error al crear el hospital"
+        })
+    }
 
 
 }

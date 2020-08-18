@@ -17,7 +17,7 @@ router.post('/', [
     validarCampos
 ], crearMedico)
 
-router.put('/:id', actualizarMedico)
+router.put('/:id', validarJwt, actualizarMedico)
 
 
 router.delete('/:id', borrarMedico)

@@ -15,10 +15,15 @@ router.post('/', [
     validarCampos
 ], crearHospital)
 
-router.put('/:id', actualizarHospital)
+router.put('/:id', [
+    validarJwt,
+    check('nombre', "El nombre es obligatorio").not().isEmpty(),
+    validarCampos
+],
+    actualizarHospital)
 
 
-router.delete('/:id', borrarHospital)
+router.delete('/:id', validarJwt, borrarHospital)
 
 
 module.exports = router
