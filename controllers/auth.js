@@ -4,6 +4,7 @@ const Usuario = require("../models/usuario");
 const bcrypt = require("bcryptjs");
 const { generarJwt } = require("../helpers/jwt");
 const { googleVerify } = require("../helpers/google-verify");
+const { getMenuSidebar } = require("../helpers/menu-sidebar");
 
 const login = async (req, res = response) => {
   const { email, password } = req.body;
@@ -21,6 +22,7 @@ const login = async (req, res = response) => {
     res.status(200).json({
       ok: true,
       token,
+      menu: getMenuSidebar(userExists.role),
     });
   } catch (error) {
     console.log(error);
@@ -56,10 +58,10 @@ const googleSignIn = async (req, res) => {
 
     await usuario.save();
     const tokenJwt = await generarJwt(usuario._id);
-
     res.json({
       ok: true,
       token: tokenJwt,
+      menu: getMenuSidebar(usuario.role),
     });
   } catch (error) {
     console.log(error);
@@ -80,6 +82,7 @@ const renewToken = async (req, res) => {
     ok: true,
     token,
     usuario,
+    menu: getMenuSidebar(usuario.role),
   });
 };
 

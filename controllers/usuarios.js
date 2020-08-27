@@ -59,6 +59,7 @@ const crearUsuario = async (req, res = response) => {
 const actualizarUsuario = async (req, res) => {
   // TODO: Validar token y comprobar si es el usuario correcto
   const uid = req.params.id;
+  const currentUser = req.user;
   try {
     const usuarioDB = await Usuario.findOne({ _id: uid });
     if (!usuarioDB) {
@@ -84,7 +85,10 @@ const actualizarUsuario = async (req, res) => {
 
     usuarioDB.email = email;
     usuarioDB.nombre = nombre;
-    usuarioDB.role = role;
+
+    if (currentUser.role === "ADMIN_ROLE") {
+      usuarioDB.role = role;
+    }
 
     await usuarioDB.save();
     return res.json({ ok: true, usuario: usuarioDB });
